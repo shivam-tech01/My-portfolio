@@ -73,12 +73,12 @@ body::after {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 500;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 28px 64px;
+  padding: 28px 80px;
   transition: padding 0.4s, background 0.4s, border-color 0.4s;
   border-bottom: 1px solid transparent;
 }
 nav.stuck {
-  padding: 16px 64px;
+  padding: 16px 80px;
   background: rgba(8,7,6,0.92);
   backdrop-filter: blur(20px);
   border-color: var(--line);
@@ -105,7 +105,7 @@ nav.stuck {
 .hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 0 64px 80px;
+  padding: 0 80px 80px;
   position: relative;
   overflow: hidden;
 }
@@ -127,14 +127,7 @@ nav.stuck {
 }
 @keyframes bgDrift { from { transform: translate(-50%,-50%) scale(1); } to { transform: translate(-50%,-52%) scale(1.03); } }
 
-/* Vertical line left */
-.hero-line {
-  position: absolute;
-  top: 0; left: 64px;
-  width: 1px; height: 100%;
-  background: linear-gradient(to bottom, transparent, var(--orange) 40%, var(--orange) 60%, transparent);
-  opacity: 0.2;
-}
+.hero-line { display: none; }
 
 /* Orange orb */
 .orb {
@@ -264,7 +257,7 @@ h1 .stroke {
 /* Scroll indicator */
 .scroll-hint {
   position: absolute;
-  bottom: 32px; right: 64px;
+  bottom: 32px; right: 80px;
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: 10px;
@@ -284,7 +277,7 @@ h1 .stroke {
 @keyframes slideRight { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
 
 /* ── SECTION WRAPPER ── */
-.section-wrap { padding: 120px 64px; position: relative; }
+.section-wrap { padding: 120px 80px; position: relative; }
 .section-wrap.alt { background: var(--dark); }
 
 .s-label {
@@ -399,7 +392,7 @@ h1 .stroke {
   padding: 5px 12px;
 }
 
-.exp-right { padding: 40px 0 40px 40px; }
+.exp-right { padding: 40px 32px 40px 40px; }
 
 .proj {
   padding: 20px 0;
@@ -598,7 +591,7 @@ h1 .stroke {
 
 /* ── FOOTER ── */
 footer {
-  padding: 28px 64px;
+  padding: 28px 80px;
   border-top: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
   font-family: 'Barlow Condensed', sans-serif;
@@ -638,7 +631,7 @@ footer {
   .proj-impact { text-align: left; }
   .impact-grid { grid-template-columns: 1fr 1fr; }
   .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-  footer { flex-direction: column; gap: 8px; padding: 24px; }
+  footer { flex-direction: column; gap: 8px; padding: 24px; text-align: center; }
   .scroll-hint { display: none; }
   h1 { font-size: clamp(70px, 18vw, 120px); }
   .hero-stats { flex-wrap: wrap; }
@@ -672,14 +665,14 @@ footer {
   <div class="hero-content">
     <div class="hero-eyebrow">
       <div class="eyebrow-line"></div>
-      <div class="eyebrow-text">QA Engineer · Manual and Automation Testing Specialist · 2.5 Years</div>
+      <div class="eyebrow-text">QA Engineer · Manual and Automation Testing Specialist · 2.7 Years</div>
     </div>
 
     <h1>SHIVAM<br><span class="stroke">AGRAWAL</span></h1>
 
     <div class="hero-bottom">
       <p class="hero-desc">
-        Breaking software so yours doesn't break in production. Automation-first QA engineer across fintech, gaming, and health — delivering measurable quality, release after release.
+        Breaking software so yours doesn't break in production. Manual and Automation-first QA engineer across fintech, gaming, and health — delivering measurable quality, release after release.
       </p>
       <div class="hero-cta">
         <a href="#experience" class="btn-fire">See My Work ↘</a>
@@ -973,7 +966,7 @@ footer {
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="footer-logo">SA</div>
-  <span>QA Engineer · Automation Specialist</span>
+  <span>QA Engineer · Manual and Automation Testing Specialist</span>
   <span>© 2026</span>
 </footer>
 
