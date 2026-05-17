@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Agrawal — QA Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;1,300&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --black: #080706;
+  --dark: #0f0d0b;
+  --dark2: #161310;
+  --orange: #f5720a;
+  --amber: #ffaa00;
+  --orange-dim: rgba(245,114,10,0.12);
+  --orange-border: rgba(245,114,10,0.25);
+  --white: #f0ebe4;
+  --grey: #5a5048;
+  --grey2: #8a7d72;
+  --line: rgba(255,255,255,0.07);
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--orange);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: normal;
+}
+#cursor-ring {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(245,114,10,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: left 0.12s ease, top 0.12s ease, width 0.25s, height 0.25s;
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor {
+  width: 20px; height: 20px;
+  background: var(--amber);
+}
+
+/* ── NOISE TEXTURE ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9990;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 64px;
+  transition: padding 0.4s, background 0.4s, border-color 0.4s;
+  border-bottom: 1px solid transparent;
+}
+nav.stuck {
+  padding: 16px 64px;
+  background: rgba(8,7,6,0.92);
+  backdrop-filter: blur(20px);
+  border-color: var(--line);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 3px;
+  color: var(--orange);
+}
+.nav-links { display: flex; gap: 40px; }
+.nav-links a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--grey2);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--orange); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 64px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Big decorative BG text */
+.hero-bg-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(180px, 28vw, 380px);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(245,114,10,0.07);
+  letter-spacing: -10px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: bgDrift 18s ease-in-out infinite alternate;
+}
+@keyframes bgDrift { from { transform: translate(-50%,-50%) scale(1); } to { transform: translate(-50%,-52%) scale(1.03); } }
+
+/* Vertical line left */
+.hero-line {
+  position: absolute;
+  top: 0; left: 64px;
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--orange) 40%, var(--orange) 60%, transparent);
+  opacity: 0.2;
+}
+
+/* Orange orb */
+.orb {
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(245,114,10,0.18) 0%, rgba(255,170,0,0.06) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: orbPulse 6s ease-in-out infinite;
+}
+@keyframes orbPulse { 0%,100% { transform: scale(1); opacity:1; } 50% { transform: scale(1.1); opacity:0.7; } }
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 20px;
+  animation: slideRight 0.8s ease both;
+}
+.eyebrow-line { width: 48px; height: 2px; background: var(--orange); }
+.eyebrow-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(90px, 16vw, 200px);
+  line-height: 0.88;
+  letter-spacing: -2px;
+  color: var(--white);
+  animation: slideRight 0.8s 0.1s ease both;
+}
+h1 .stroke {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--orange);
+}
+
+.hero-bottom {
+  margin-top: 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px;
+  animation: slideRight 0.8s 0.2s ease both;
+}
+.hero-desc {
+  max-width: 420px;
+  font-size: 15px;
+  color: var(--grey2);
+  line-height: 1.8;
+  font-weight: 300;
+}
+.hero-cta {
+  display: flex; gap: 16px; align-items: center;
+}
+.btn-fire {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--orange);
+  color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  text-decoration: none;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-fire:hover { background: var(--amber); transform: translateY(-3px); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--orange-border);
+  color: var(--orange);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 15px 28px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-outline:hover { background: var(--orange-dim); border-color: var(--orange); }
+
+.hero-stats {
+  display: flex; gap: 0;
+  border: 1px solid var(--line);
+  animation: slideRight 0.8s 0.3s ease both;
+  margin-top: 56px;
+}
+.h-stat {
+  flex: 1;
+  padding: 20px 32px;
+  border-right: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.h-stat:last-child { border-right: none; }
+.h-stat::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:2px;
+  background: var(--orange);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s;
+}
+.h-stat:hover::before { transform: scaleX(1); }
+.h-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--orange);
+  line-height: 1;
+}
+.h-stat-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 2px;
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px; right: 64px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--grey);
+  writing-mode: vertical-rl;
+  animation: float 3s ease-in-out infinite;
+}
+.scroll-hint::after {
+  content:'';
+  width:1px; height:48px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+@keyframes slideRight { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+
+/* ── SECTION WRAPPER ── */
+.section-wrap { padding: 120px 64px; position: relative; }
+.section-wrap.alt { background: var(--dark); }
+
+.s-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.s-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(56px, 8vw, 100px);
+  letter-spacing: -1px;
+  line-height: 0.9;
+  color: var(--white);
+  margin-bottom: 64px;
+}
+.s-title span { color: var(--orange); }
+
+/* ── SKILLS ── */
+.skills-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line);
+}
+.sk-cell {
+  padding: 32px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: background 0.3s;
+}
+.sk-cell:hover { background: rgba(245,114,10,0.04); }
+.sk-cell:nth-child(3n) { border-right: none; }
+.sk-cell:nth-last-child(-n+3) { border-bottom: none; }
+.sk-cat {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sk-cat::after { content:''; flex:1; height:1px; background:var(--orange-border); }
+.sk-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.sk-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  color: var(--grey2);
+  transition: all 0.2s;
+}
+.sk-tag:hover { border-color: var(--orange); color: var(--white); }
+.sk-tag.hot {
+  border-color: var(--orange-border);
+  color: var(--orange);
+  background: var(--orange-dim);
+}
+
+/* ── EXPERIENCE ── */
+.exp-list { display: flex; flex-direction: column; }
+
+.exp-row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.exp-row::before {
+  content: '';
+  position: absolute; left:0; top:0; bottom:0; width:3px;
+  background: var(--orange);
+  transform: scaleY(0); transform-origin: top;
+  transition: transform 0.4s;
+}
+.exp-row:hover::before { transform: scaleY(1); }
+.exp-row:hover { background: rgba(245,114,10,0.02); }
+
+.exp-left {
+  padding: 40px 32px 40px 0;
+  border-right: 1px solid var(--line);
+}
+.exp-co {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+.exp-period {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--grey);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.exp-role-badge {
+  margin-top: 16px;
+  display: inline-block;
+  background: var(--orange-dim);
+  border: 1px solid var(--orange-border);
+  color: var(--orange);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+}
+
+.exp-right { padding: 40px 0 40px 40px; }
+
+.proj {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-start: flex-start;
+}
+.proj:last-child { border-bottom: none; padding-bottom: 0; }
+.proj:first-child { padding-top: 0; }
+
+.proj-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.proj-name span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+  font-weight: 300;
+  margin-left: 12px;
+}
+.proj-desc {
+  font-size: 13px;
+  color: var(--grey2);
+  line-height: 1.75;
+}
+.proj-impact {
+  text-align: right;
+  flex-shrink: 0;
+}
+.impact-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--orange);
+  line-height: 1;
+}
+.impact-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 2px;
+}
+
+/* ── ACHIEVEMENTS MARQUEE ── */
+.marquee-section {
+  padding: 0;
+  overflow: hidden;
+  background: var(--orange);
+  border-top: none;
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+.marquee-item {
+  padding: 20px 40px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--black);
+  display: flex; align-items: center; gap: 24px;
+  border-right: 2px solid rgba(0,0,0,0.15);
+  flex-shrink: 0;
+}
+.marquee-dot { width: 6px; height: 6px; background: var(--black); border-radius: 50%; opacity: 0.4; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── IMPACT GRID ── */
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--line);
+}
+.i-card {
+  background: var(--dark);
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.i-card::after {
+  content: '';
+  position: absolute; bottom:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--orange), var(--amber));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s;
+}
+.i-card:hover::after { transform: scaleX(1); }
+.i-card:hover { background: rgba(245,114,10,0.04); }
+.i-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  line-height: 1;
+  color: var(--orange);
+  opacity: 0.9;
+}
+.i-desc {
+  font-size: 14px;
+  color: var(--grey2);
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.i-source {
+  margin-top: 20px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* ── CONTACT ── */
+.contact-section { background: var(--dark); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.contact-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 7vw, 88px);
+  line-height: 0.9;
+  letter-spacing: -1px;
+  margin-top: -12px;
+}
+.contact-big span { color: var(--orange); }
+.contact-sub {
+  font-size: 15px;
+  color: var(--grey2);
+  line-height: 1.8;
+  margin-top: 24px;
+}
+.contact-links { display: flex; flex-direction: column; gap: 3px; }
+.c-link {
+  display: flex; align-items: center; gap: 20px;
+  padding: 22px 24px;
+  background: var(--dark2);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--white);
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.c-link::before {
+  content: '';
+  position: absolute; left:0; top:0; bottom:0; width:3px;
+  background: var(--orange);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.3s;
+}
+.c-link:hover { background: rgba(245,114,10,0.06); border-color: var(--orange-border); }
+.c-link:hover::before { transform: scaleY(1); }
+.c-icon {
+  font-size: 20px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--orange-border);
+  color: var(--orange);
+  flex-shrink: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+}
+.c-type {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.c-val {
+  font-size: 14px;
+  color: var(--white);
+  margin-top: 2px;
+}
+.c-arrow {
+  margin-left: auto;
+  color: var(--grey);
+  font-size: 18px;
+  transition: color 0.2s, transform 0.2s;
+}
+.c-link:hover .c-arrow { color: var(--orange); transform: translateX(4px); }
+
+/* ── FOOTER ── */
+footer {
+  padding: 28px 64px;
+  border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: var(--orange);
+}
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-left.in { opacity: 1; transform: translateX(0); }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 900px){
+  nav { padding: 20px 24px; }
+  nav.stuck { padding: 14px 24px; }
+  .nav-links { gap: 24px; }
+  .hero { padding: 0 24px 60px; }
+  .hero-line { left: 24px; }
+  .section-wrap { padding: 80px 24px; }
+  .skills-table { grid-template-columns: 1fr 1fr; }
+  .sk-cell:nth-child(3n) { border-right: 1px solid var(--line); }
+  .sk-cell:nth-child(2n) { border-right: none; }
+  .exp-row { grid-template-columns: 1fr; }
+  .exp-left { border-right: none; border-bottom: 1px solid var(--line); padding: 32px 0; }
+  .exp-right { padding: 32px 0; }
+  .proj { grid-template-columns: 1fr; }
+  .proj-impact { text-align: left; }
+  .impact-grid { grid-template-columns: 1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  footer { flex-direction: column; gap: 8px; padding: 24px; }
+  .scroll-hint { display: none; }
+  h1 { font-size: clamp(70px, 18vw, 120px); }
+  .hero-stats { flex-wrap: wrap; }
+  .h-stat { min-width: 50%; border-bottom: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">SHIVAM</div>
+  <div class="nav-links">
+    <a href="#skills">Skills</a>
+    <a href="#experience">Work</a>
+    <a href="#impact">Impact</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="orb"></div>
+  <div class="hero-line"></div>
+  <div class="hero-bg-text">QA</div>
+  <div class="scroll-hint">Scroll</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-text">QA Engineer · Automation Specialist · 2.5 Years</div>
+    </div>
+
+    <h1>SHIVAM<br><span class="stroke">AGRAWAL</span></h1>
+
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        Breaking software so yours doesn't break in production. Automation-first QA engineer across fintech, gaming, and health — delivering measurable quality, release after release.
+      </p>
+      <div class="hero-cta">
+        <a href="#experience" class="btn-fire">See My Work ↘</a>
+        <a href="mailto:shivamagrawal1june@gmail.com" class="btn-outline">Hire Me</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="h-stat">
+        <div class="h-stat-num">2.5+</div>
+        <div class="h-stat-label">Years in QA</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-num">5+</div>
+        <div class="h-stat-label">Products Shipped</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-num">350+</div>
+        <div class="h-stat-label">Test Cases</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-num">0</div>
+        <div class="h-stat-label">Critical Escapes</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-num">40%</div>
+        <div class="h-stat-label">Efficiency Gains</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-dot"></span>Playwright</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Selenium</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>REST API Testing</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Postman</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>JIRA</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>TestNG</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>AI-Assisted QA</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Cross-Browser Testing</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Cypress</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>MySQL</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Git</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Agile / Scrum</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="marquee-item"><span class="marquee-dot"></span>Playwright</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Selenium</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>REST API Testing</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Postman</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>JIRA</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>TestNG</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>AI-Assisted QA</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Cross-Browser Testing</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Cypress</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>MySQL</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Git</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Agile / Scrum</div>
+  </div>
+</div>
+
+<!-- ═══ SKILLS ═══ -->
+<section class="section-wrap" id="skills">
+  <div class="reveal">
+    <div class="s-label">Arsenal</div>
+    <div class="s-title">Technical <span>Stack</span></div>
+  </div>
+  <div class="skills-table reveal">
+    <div class="sk-cell">
+      <div class="sk-cat">Automation</div>
+      <div class="sk-items">
+        <span class="sk-tag hot">Playwright</span>
+        <span class="sk-tag hot">Selenium (Java)</span>
+        <span class="sk-tag">Cypress</span>
+        <span class="sk-tag">TestNG</span>
+      </div>
+    </div>
+    <div class="sk-cell">
+      <div class="sk-cat">Languages</div>
+      <div class="sk-items">
+        <span class="sk-tag hot">JavaScript</span>
+        <span class="sk-tag hot">Java</span>
+        <span class="sk-tag">Python</span>
+        <span class="sk-tag">SQL</span>
+      </div>
+    </div>
+    <div class="sk-cell">
+      <div class="sk-cat">API & DB</div>
+      <div class="sk-items">
+        <span class="sk-tag hot">Postman</span>
+        <span class="sk-tag hot">REST (JSON/XML)</span>
+        <span class="sk-tag">MySQL</span>
+        <span class="sk-tag">DB Testing</span>
+      </div>
+    </div>
+    <div class="sk-cell">
+      <div class="sk-cat">Testing Types</div>
+      <div class="sk-items">
+        <span class="sk-tag">Functional</span>
+        <span class="sk-tag">Regression</span>
+        <span class="sk-tag">Smoke/Sanity</span>
+        <span class="sk-tag">Cross-Browser</span>
+        <span class="sk-tag">UI/UX</span>
+        <span class="sk-tag">Integration</span>
+      </div>
+    </div>
+    <div class="sk-cell">
+      <div class="sk-cat">Tools</div>
+      <div class="sk-items">
+        <span class="sk-tag hot">JIRA</span>
+        <span class="sk-tag hot">Git</span>
+        <span class="sk-tag">Chrome DevTools</span>
+        <span class="sk-tag">Excel</span>
+      </div>
+    </div>
+    <div class="sk-cell">
+      <div class="sk-cat">AI-Assisted QA</div>
+      <div class="sk-items">
+        <span class="sk-tag hot">Claude</span>
+        <span class="sk-tag">ChatGPT</span>
+        <span class="sk-tag">GitHub Copilot</span>
+        <span class="sk-tag">Gemini</span>
+        <span class="sk-tag">Perplexity</span>
+        <span class="sk-tag">Cursor</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EXPERIENCE ═══ -->
+<section class="section-wrap alt" id="experience">
+  <div class="reveal">
+    <div class="s-label">Career</div>
+    <div class="s-title">Work <span>History</span></div>
+  </div>
+  <div class="exp-list reveal">
+    <div class="exp-row">
+      <div class="exp-left">
+        <div class="exp-co">GKM IT</div>
+        <div class="exp-period">Aug 2023 — Apr 2026</div>
+        <div class="exp-role-badge">QA Engineer</div>
+      </div>
+      <div class="exp-right">
+
+        <div class="proj">
+          <div>
+            <div class="proj-name">Accel <span>· Fintech</span></div>
+            <div class="proj-desc">200+ test cases covering investment management, portfolio tracking, and end-to-end funding workflows. Full REST API, SQL, and defect lifecycle management. Used Claude & ChatGPT to boost edge case coverage by 20%.</div>
+          </div>
+          <div class="proj-impact">
+            <div class="impact-num">50%</div>
+            <div class="impact-label">Data accuracy<br>improvement</div>
+          </div>
+        </div>
+
+        <div class="proj">
+          <div>
+            <div class="proj-name">KGen <span>· Gaming</span></div>
+            <div class="proj-desc">Tested gamified user acquisition, engagement tracking, and reward calculation logic. Systematic cross-browser testing resolved cross-platform quest inconsistencies. Leveraged Perplexity AI & Gemini for complex gamification validation.</div>
+          </div>
+          <div class="proj-impact">
+            <div class="impact-num">35%</div>
+            <div class="impact-label">Engagement testing<br>efficiency gain</div>
+          </div>
+        </div>
+
+        <div class="proj">
+          <div>
+            <div class="proj-name">Nourish <span>· Health & Wellness</span></div>
+            <div class="proj-desc">Full test plan across Functional, Regression, Integration, and REST API testing. Validated JSON/XML payloads in Postman across rapid feature release cycles. Used Microsoft Copilot for automated test report generation.</div>
+          </div>
+          <div class="proj-impact">
+            <div class="impact-num">↓</div>
+            <div class="impact-label">Release delays<br>reduced</div>
+          </div>
+        </div>
+
+        <div class="proj">
+          <div>
+            <div class="proj-name">Precious <span>· Productivity</span></div>
+            <div class="proj-desc">150+ test cases for goal progression, time-logging, and reporting accuracy. Git-based developer collaboration for fix verification and regression retesting across new releases.</div>
+          </div>
+          <div class="proj-impact">
+            <div class="impact-num">30%</div>
+            <div class="impact-label">Recurring bugs<br>eliminated</div>
+          </div>
+        </div>
+
+        <div class="proj">
+          <div>
+            <div class="proj-name">Nest (HRMS) <span>· Internal Portal</span></div>
+            <div class="proj-desc">Built end-to-end Playwright automation scripts for employee feedback, project allocation, and performance modules. Cross-browser testing across Chrome, Firefox, and Edge. Used Claude & ChatGPT to identify automation blind spots.</div>
+          </div>
+          <div class="proj-impact">
+            <div class="impact-num">40%</div>
+            <div class="impact-label">QA efficiency<br>boosted</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ IMPACT NUMBERS ═══ -->
+<section class="section-wrap" id="impact">
+  <div class="reveal">
+    <div class="s-label">By The Numbers</div>
+    <div class="s-title">Delivered <span>Impact</span></div>
+  </div>
+  <div class="impact-grid reveal">
+    <div class="i-card">
+      <div class="i-num">30%</div>
+      <div class="i-desc">Reduction in recurring production bugs through structured test case design and iterative developer collaboration</div>
+      <div class="i-source">Precious — Productivity App</div>
+    </div>
+    <div class="i-card">
+      <div class="i-num">50%</div>
+      <div class="i-desc">Improvement in investor data accuracy by validating end-to-end funding workflows and targeted SQL queries</div>
+      <div class="i-source">Accel — Fintech Platform</div>
+    </div>
+    <div class="i-card">
+      <div class="i-num">35%</div>
+      <div class="i-desc">Boost in user engagement testing efficiency via cross-browser and systematic REST API validation</div>
+      <div class="i-source">KGen — Gaming Platform</div>
+    </div>
+    <div class="i-card">
+      <div class="i-num">40%</div>
+      <div class="i-desc">QA efficiency gain from Playwright automation scripts built and maintained for critical regression flows</div>
+      <div class="i-source">Nest — HRMS Portal</div>
+    </div>
+    <div class="i-card">
+      <div class="i-num">5+</div>
+      <div class="i-desc">Products delivered with complete end-to-end QA ownership across fintech, gaming, health, and productivity domains</div>
+      <div class="i-source">GKM IT — Full Tenure</div>
+    </div>
+    <div class="i-card">
+      <div class="i-num">ZERO</div>
+      <div class="i-desc">Critical defect escapes to production across all five products — a clean record maintained throughout the entire tenure</div>
+      <div class="i-source">All Projects · All Domains</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="section-wrap contact-section" id="contact">
+  <div class="contact-grid">
+    <div class="reveal-left">
+      <div class="s-label">Let's Work Together</div>
+      <div class="contact-big">GOT A<br>PRODUCT<br>TO <span>TEST?</span></div>
+      <p class="contact-sub">Open to new QA engineering roles. I bring automation expertise, AI tooling fluency, and a proven track record of zero critical defect escapes.</p>
+    </div>
+    <div class="reveal">
+      <div class="contact-links">
+        <a href="mailto:shivamagrawal1june@gmail.com" class="c-link">
+          <div class="c-icon">✉</div>
+          <div>
+            <div class="c-type">Email</div>
+            <div class="c-val">shivamagrawal1june@gmail.com</div>
+          </div>
+          <span class="c-arrow">→</span>
+        </a>
+        <a href="tel:+916387746813" class="c-link">
+          <div class="c-icon">☎</div>
+          <div>
+            <div class="c-type">Phone</div>
+            <div class="c-val">+91 63877 46813</div>
+          </div>
+          <span class="c-arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/in/shivam-agrawal-126b99175" target="_blank" class="c-link">
+          <div class="c-icon">in</div>
+          <div>
+            <div class="c-type">LinkedIn</div>
+            <div class="c-val">shivam-agrawal-126b99175</div>
+          </div>
+          <span class="c-arrow">→</span>
+        </a>
+      </div>
+      <div style="margin-top:32px; padding:24px; border:1px solid var(--line); font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; line-height:2;">
+        B.Tech — Computer Science Engineering<br>
+        Dr. Virendra Swarup Memorial Trust, Unnao<br>
+        CGPA: 8.6 / 10 · Graduated 2023
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">SA</div>
+  <span>QA Engineer · Automation Specialist</span>
+  <span>© 2026</span>
+</footer>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+function animateRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animateRing); }
+animateRing();
+
+// Sticky nav
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 60));
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }});
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal, .reveal-left').forEach(el => obs.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'}); });
+});
+</script>
+</body>
+</html>
